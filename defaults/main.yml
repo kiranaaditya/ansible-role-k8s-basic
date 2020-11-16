@@ -1,7 +1,7 @@
 ---
 # defaults file for ansible-role-k8s-basic
 
-    packages_to_install:
+    packages_to_install_for_k8s:
     - kubelet
     - kubeadm
     - kubectl
