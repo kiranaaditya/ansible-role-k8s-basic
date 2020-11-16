@@ -1,2 +1,17 @@
 ---
 # vars file for ansible-role-k8s-basic
+
+ports_to_open_on_master:
+- 6443/tcp
+- 2379-2380/tcp
+- 10250-10252/tcp
+    
+ports_to_open_on_worker:
+- 10250/tcp
+- 30000-32767/tcp
+
+packages_to_install:
+- docker
+- kubelet
+- kubeadm
+- kubectl
