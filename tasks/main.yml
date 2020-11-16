@@ -29,7 +29,7 @@
   yum:
     name: "{{ item }}"
     state: present
-  loop: "{{ packages_to_install }}"
+  loop: "{{ packages_to_install_for_k8s }}"
 
 - name: Adding ports to firewall in master
   firewalld:
