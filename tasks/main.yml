@@ -1,53 +1,52 @@
 ---
 # tasks file for ansible-role-k8s-basic
 
-  tasks:
-    - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
-      shell: |
-        swapoff -a
+- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+  shell: |
+    swapoff -a
 
 
-    - name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
-      replace:
-        path: /etc/fstab
-        regexp: '^([^#][^\s]*\s+[^\s]+\s+swap\s+.*)$'
-        replace: '# \1'
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#][^\s]*\s+[^\s]+\s+swap\s+.*)$'
+    replace: '# \1'
 
-    - name: Installing the key
-      yum_repository:
-        name: Kubernetes
-        description: Adding repository for kubernets
-        file: k8s
-        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
-        enabled: yes
-        gpgcheck: yes
-        repo_gpgcheck: yes
-        gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-      notify:
-        - Yum clean
+- name: Installing the key
+  yum_repository:
+    name: Kubernetes
+    description: Adding repository for kubernets
+    file: k8s
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  notify:
+    - Yum clean
 
-    - name: Installing packages
-      yum:
-        name: "{{ item }}"
-        state: present
-      loop: "{{ packages_to_install }}"
+- name: Installing packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages_to_install }}"
 
-    - name: Adding ports to firewall in master
-      firewalld:
-        port: "{{ item }}"
-        permanent: yes
-        state: enabled
-      loop: "{{ ports_to_open_on_master }}"
-      when: "'manager' in inventory_hostname"
-      notify:
-      - Reload firewalld
+- name: Adding ports to firewall in master
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ ports_to_open_on_master }}"
+  when: "'manager' in inventory_hostname"
+  notify:
+  - Reload firewalld
 
-    - name: Adding ports to firewall in worker
-      firewalld:
-        port: "{{ item }}"
-        permanent: yes
-        state: enabled
-      loop: "{{ ports_to_open_on_worker }}"
-      when: "'worker' in inventory_hostname"
-      notify:
-      - Reload firewalld
+- name: Adding ports to firewall in worker
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ ports_to_open_on_worker }}"
+  when: "'worker' in inventory_hostname"
+  notify:
+  - Reload firewalld
