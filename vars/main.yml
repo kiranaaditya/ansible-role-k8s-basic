@@ -9,8 +9,3 @@ ports_to_open_on_master:
 ports_to_open_on_worker:
 - 10250/tcp
 - 30000-32767/tcp
-
-packages_to_install:
-- kubelet
-- kubeadm
-- kubectl
