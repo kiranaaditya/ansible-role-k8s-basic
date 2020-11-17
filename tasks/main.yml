@@ -50,3 +50,8 @@
   when: "'worker' in inventory_hostname"
   notify:
   - Reload firewalld
+
+- name: Enable Kubelet
+  systemd:
+    name: kubelet
+    enabled: yes
